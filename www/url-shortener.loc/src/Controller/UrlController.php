@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Url;
 use App\Repository\UrlRepository;
+use App\Service\UrlEncoderService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,20 +14,37 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UrlController extends AbstractController
 {
+    private $urlEncoderService;
+
+    public function __construct(UrlEncoderService $urlEncoderService)
+    {
+        $this->urlEncoderService = $urlEncoderService;
+    }
+
     /**
      * @Route("/encode-url", name="encode_url")
      */
     public function encodeUrl(Request $request): JsonResponse
     {
-        $url = new Url();
-        $url->setUrl($request->get('url'));
+        $inputUrl = $request->get('url');
+        $error = $this->urlEncoderService->validateUrl($inputUrl);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($url);
-        $entityManager->flush();
+        if ($error) {
+            return $this->json([
+                'error' => $error
+            ], 400);
+        }
+
+        $hash = $this->urlEncoderService->encodeUrl($inputUrl);
+
+        if ($hash === null) {
+            return $this->json([
+                'error' => 'URL not found in the database.'
+            ], 404);
+        }
 
         return $this->json([
-            'hash' => $url->getHash()
+            'hash' => $hash
         ]);
     }
 
@@ -49,7 +67,7 @@ class UrlController extends AbstractController
     }
 
     /**
-     * @Route("/redirect/{hash}", name="url_redirect")
+     * @Route("/redirect/{hash}", name="redirect_url")
      */
     public function redirectUrl($hash, UrlRepository $urlRepository): RedirectResponse
     {
@@ -61,5 +79,4 @@ class UrlController extends AbstractController
 
         return $this->redirect($url->getUrl());
     }
-
 }
