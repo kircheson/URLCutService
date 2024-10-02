@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Url;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +20,9 @@ class UrlRepository extends ServiceEntityRepository
         parent::__construct($registry, Url::class);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function findOneByHash(string $value): ?Url
     {
         return $this->createQueryBuilder('u')
@@ -26,6 +30,6 @@ class UrlRepository extends ServiceEntityRepository
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
-        ;
+            ;
     }
 }
