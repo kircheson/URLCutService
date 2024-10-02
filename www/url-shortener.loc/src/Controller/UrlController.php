@@ -51,10 +51,8 @@ class UrlController extends AbstractController
     /**
      * @Route("/redirect/{hash}", name="url_redirect")
      */
-    public function redirectUrl($hash): RedirectResponse
+    public function redirectUrl($hash, UrlRepository $urlRepository): RedirectResponse
     {
-        /** @var UrlRepository $urlRepository */
-        $urlRepository = $this->getDoctrine()->getRepository(Url::class);
         $url = $urlRepository->findOneByHash($hash);
 
         if (!$url) {
