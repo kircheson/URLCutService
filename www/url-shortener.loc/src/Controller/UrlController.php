@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Url;
 use App\Repository\UrlRepository;
 use App\Service\UrlEncoderService;
+use App\Service\UrlDecoderService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,10 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class UrlController extends AbstractController
 {
     private $urlEncoderService;
+    private $urlDecoderService;
 
-    public function __construct(UrlEncoderService $urlEncoderService)
+    public function __construct(UrlEncoderService $urlEncoderService, UrlDecoderService $urlDecoderService)
     {
         $this->urlEncoderService = $urlEncoderService;
+        $this->urlDecoderService = $urlDecoderService;
+
     }
 
     /**
@@ -53,17 +57,8 @@ class UrlController extends AbstractController
      */
     public function decodeUrl(Request $request): JsonResponse
     {
-        /** @var UrlRepository $urlRepository */
-        $urlRepository = $this->getDoctrine()->getRepository(Url::class);
-        $url = $urlRepository->findOneByHash($request->get('hash'));
-        if (empty ($url)) {
-            return $this->json([
-                'error' => 'Non-existent hash.'
-            ]);
-        }
-        return $this->json([
-            'url' => $url->getUrl()
-        ]);
+        $hash = $request->get('hash');
+        return $this->urlDecoderService->decodeUrl($hash);
     }
 
     /**

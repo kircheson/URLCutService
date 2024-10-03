@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UrlRepository;
+use DateInterval;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,11 +33,21 @@ class Url
      */
     private $createdDate;
 
+    /**
+     * @ORM\Column(name="expired_at", type="datetime_immutable", nullable=true)
+     */
+    private $expiredAt;
+
     public function __construct()
     {
+        // Я бы здесь делал иначе, если бы в ТЗ был эндпойнт по созданию URL-ов
+        // Чтобы была возможность добавить createdDate на нужную дату и у нас не "поехал" expiredAt
+        // Пример: Я хочу создать сущность URL-а на 10.09 с текущим кодом в Конструкторе expiredAt устанавливается на
+        // <текущая дата> +24 часа, а надо было бы на 11.09. Для этого я бы вызвал установку expiredAt у setCreatedDate
         $date = new \DateTimeImmutable();
         $this->setCreatedDate($date);
-        $this->setHash($date->format('YmdHis'));
+        $this->setHash($date->format('Y-m-d H:i:s'));
+        $this->setExpiresAt($date->add(new DateInterval('P1D')));
     }
 
     public function getId(): ?int
@@ -76,6 +87,18 @@ class Url
     public function setCreatedDate(\DateTimeImmutable $createdDate): self
     {
         $this->createdDate = $createdDate;
+
+        return $this;
+    }
+
+    public function getExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->expiredAt;
+    }
+
+    public function setExpiresAt(\DateTimeImmutable $expiresAt): self
+    {
+        $this->expiredAt = $expiresAt;
 
         return $this;
     }
