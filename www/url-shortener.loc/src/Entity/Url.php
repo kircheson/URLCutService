@@ -51,7 +51,8 @@ class Url
         // <текущая дата> +24 часа, а надо было бы на 11.09. Для этого я бы вызвал установку expiredAt у setCreatedDate
         $date = new \DateTimeImmutable();
         $this->setCreatedDate($date);
-        $this->setHash($date->format('Y-m-d H:i:s'));
+/*        $this->setHash($date->format('Y-m-d H:i:s'));*/
+        $this->setHash(substr(md5($this->url), 0, 14));
         $this->setExpiresAt($date->add(new DateInterval('P1D')));
     }
 

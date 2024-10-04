@@ -29,8 +29,7 @@ class UrlRepository extends ServiceEntityRepository
             ->andWhere('u.hash = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     public function findUnsentUrls(): array
@@ -40,5 +39,29 @@ class UrlRepository extends ServiceEntityRepository
             ->setParameter('sent', false)
             ->getQuery()
             ->getResult();
+    }
+
+    // Метод для поиска уникальных URL за заданный промежуток времени
+    public function findUniqueUrlsByDateRange(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate)
+    {
+        return array_unique($this->createQueryBuilder('u')
+            ->select('u.url')
+            ->andWhere('u.created_date >= :start')
+            ->andWhere('u.created_date <= :end')
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate)
+            ->getQuery()
+            ->getResult());
+    }
+
+    // Метод для поиска уникальных URL по домену
+    public function findUniqueUrlsByDomain(string $domain)
+    {
+        return array_unique($this->createQueryBuilder('u')
+            ->select('u.url')
+            ->andWhere('u.url LIKE :domain')
+            ->setParameter('domain', '%'.$domain.'%')
+            ->getQuery()
+            ->getResult());
     }
 }

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class UrlController extends AbstractController
 {
@@ -81,6 +82,7 @@ class UrlController extends AbstractController
 
     /**
      * @Route("/api/send-urls", name="send_urls", methods={"POST"})
+     * @throws TransportExceptionInterface
      */
     public function sendUrls(): JsonResponse
     {
