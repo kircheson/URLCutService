@@ -38,6 +38,11 @@ class Url
      */
     private $expiredAt;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $sent = false;
+
     public function __construct()
     {
         // Я бы здесь делал иначе, если бы в ТЗ был эндпойнт по созданию URL-ов
@@ -99,6 +104,18 @@ class Url
     public function setExpiresAt(\DateTimeImmutable $expiresAt): self
     {
         $this->expiredAt = $expiresAt;
+
+        return $this;
+    }
+
+    public function getSent(): ?bool
+    {
+        return $this->sent;
+    }
+
+    public function setSent(bool $sent): self
+    {
+        $this->sent = $sent;
 
         return $this;
     }

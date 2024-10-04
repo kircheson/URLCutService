@@ -6,6 +6,7 @@ use App\Entity\Url;
 use App\Repository\UrlRepository;
 use App\Service\UrlEncoderService;
 use App\Service\UrlDecoderService;
+use App\Service\UrlSenderService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,12 +18,13 @@ class UrlController extends AbstractController
 {
     private $urlEncoderService;
     private $urlDecoderService;
+    private $urlSenderService;
 
-    public function __construct(UrlEncoderService $urlEncoderService, UrlDecoderService $urlDecoderService)
+    public function __construct(UrlEncoderService $urlEncoderService, UrlDecoderService $urlDecoderService, UrlSenderService $urlSenderService)
     {
         $this->urlEncoderService = $urlEncoderService;
         $this->urlDecoderService = $urlDecoderService;
-
+        $this->urlSenderService = $urlSenderService;
     }
 
     /**
@@ -54,6 +56,7 @@ class UrlController extends AbstractController
 
     /**
      * @Route("/decode-url", name="decode_url")
+     * @throws NonUniqueResultException
      */
     public function decodeUrl(Request $request): JsonResponse
     {
@@ -63,6 +66,7 @@ class UrlController extends AbstractController
 
     /**
      * @Route("/redirect/{hash}", name="redirect_url")
+     * @throws NonUniqueResultException
      */
     public function redirectUrl($hash, UrlRepository $urlRepository): RedirectResponse
     {
@@ -73,5 +77,19 @@ class UrlController extends AbstractController
         }
 
         return $this->redirect($url->getUrl());
+    }
+
+    /**
+     * @Route("/api/send-urls", name="send_urls", methods={"POST"})
+     */
+    public function sendUrls(): JsonResponse
+    {
+        try {
+            // Отправляем новые URL
+            $this->urlSenderService->sendNewUrls();
+            return new JsonResponse(['status' => 'success'], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 }

@@ -23,6 +23,7 @@ class UrlFixtures extends Fixture
             $url->setUrl($data['url']);
             $url->setHash($data['hash']);
             $url->setCreatedDate(new \DateTimeImmutable());
+            $url->setSent(false); // Устанавливаем поле sent в false
 
             $manager->persist($url);
         }
