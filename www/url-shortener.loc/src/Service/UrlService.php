@@ -42,18 +42,20 @@ class UrlService
     public function getStats(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, ?string $domain): array
     {
         // Получаем количество уникальных URL за заданный промежуток времени.
-        $uniqueUrlsCount = count($this->entityManager->getRepository(Url::class)->findUniqueUrlsByDateRange($startDate, $endDate));
+        $uniqueUrls = $this->entityManager->getRepository(Url::class)->findUniqueUrlsByDateRange($startDate, $endDate);
+        $uniqueUrlsCount = count($uniqueUrls); // Подсчитываем количество уникальных URL
 
         // Получаем количество уникальных URL с указанным доменом.
         if ($domain) {
-            $uniqueDomainCount = count($this->entityManager->getRepository(Url::class)->findUniqueUrlsByDomain($domain));
+            $uniqueDomainUrls = $this->entityManager->getRepository(Url::class)->findUniqueUrlsByDomain($domain);
+            $uniqueDomainCount = count($uniqueDomainUrls); // Подсчитываем количество уникальных доменных URL
         } else {
             $uniqueDomainCount = 0; // Если домен не указан, устанавливаем в 0.
         }
 
         return [
-            'unique_urls_count' => $uniqueUrlsCount,
-            'unique_domain_count' => $uniqueDomainCount,
+            'unique_urls_count' => (int)$uniqueUrlsCount,
+            'unique_domain_count' => (int)$uniqueDomainCount,
         ];
     }
 }

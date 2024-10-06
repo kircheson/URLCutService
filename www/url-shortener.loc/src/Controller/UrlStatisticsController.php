@@ -1,7 +1,5 @@
 <?php
 
-// src/Controller/UrlStatisticsController.php
-
 namespace App\Controller;
 
 use App\Service\UrlService;
