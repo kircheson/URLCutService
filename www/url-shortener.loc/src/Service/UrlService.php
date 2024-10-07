@@ -19,6 +19,15 @@ class UrlService
     {
         // Создаем новую сущность Url
         try {
+            // Генерируем уникальный хеш на основе переданного URL
+            $hash = substr(md5($urlString), 0, 14);
+
+            // Проверяем существование хеша в базе данных
+            $existingUrl = $this->entityManager->getRepository(Url::class)->findOneBy(['hash' => $hash]);
+            if ($existingUrl) {
+                return new JsonResponse(['error' => 'URL with this hash already exists'], 409);
+            }
+
             $url = new Url();
             $url->setUrl($urlString);
 
@@ -28,6 +37,9 @@ class UrlService
                 return new JsonResponse(['error' => 'Invalid date format'], 400);
             }
             $url->setCreatedDate($date);
+
+            // Устанавливаем сгенерированный хеш
+            $url->setHash($hash);
 
             // Сохраняем в базе данных
             $this->entityManager->persist($url);
@@ -41,7 +53,6 @@ class UrlService
 
     public function getStats(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, ?string $domain): array
     {
-        // Получаем количество уникальных URL за заданный промежуток времени.
         $uniqueUrls = $this->entityManager->getRepository(Url::class)->findUniqueUrlsByDateRange($startDate, $endDate);
         $uniqueUrlsCount = count($uniqueUrls); // Подсчитываем количество уникальных URL
 

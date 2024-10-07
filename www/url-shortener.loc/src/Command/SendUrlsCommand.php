@@ -32,12 +32,10 @@ class SendUrlsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Вызываем метод отправки новых URL
         try {
             $this->urlSenderService->sendNewUrls($this->endpoint);
             $output->writeln("New URLs sent successfully.");
         } catch (\Exception $e) {
-            // Обработка ошибок при выполнении команды
             $output->writeln("Error: " . $e->getMessage());
             return Command::FAILURE;
         }

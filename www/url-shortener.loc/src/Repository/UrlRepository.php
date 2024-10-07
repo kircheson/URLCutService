@@ -41,7 +41,7 @@ class UrlRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // Метод для поиска уникальных URL за заданный промежуток времени
+/*     Метод для поиска уникальных URL за заданный промежуток времени*/
     public function findUniqueUrlsByDateRange(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate)
     {
         return $this->createQueryBuilder('u')

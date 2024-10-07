@@ -40,7 +40,7 @@ class UrlStatisticsController extends AbstractController
     public function getStats(Request $request): JsonResponse
     {
         try {
-            // Получаем даты из параметров запроса (формат: YYYY-MM-DD)
+            // Получаем даты из параметров запроса (формат: YYYY-MM-DD-H-I-S)
             if (!$startDate = new \DateTimeImmutable($request->query->get('start_date'))) {
                 throw new \Exception("Invalid start date");
             }
@@ -49,10 +49,8 @@ class UrlStatisticsController extends AbstractController
                 throw new \Exception("Invalid end date");
             }
 
-            // Получаем домен (если указан)
             $domain = trim($request->query->get('domain'));
 
-            // Используем сервис для получения статистики
             return new JsonResponse($this->urlService->getStats($startDate, $endDate, $domain));
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'Could not retrieve statistics: ' . $e->getMessage()], 500);

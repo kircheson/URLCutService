@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=UrlRepository::class)
+ * @ORM\Table(name="url", uniqueConstraints={@ORM\UniqueConstraint(name="unique_hash", columns={"hash"})})
  */
 class Url
 {
@@ -45,13 +46,12 @@ class Url
 
     public function __construct()
     {
-        // Я бы здесь делал иначе, если бы в ТЗ был эндпойнт по созданию URL-ов
-        // Чтобы была возможность добавить createdDate на нужную дату и у нас не "поехал" expiredAt
-        // Пример: Я хочу создать сущность URL-а на 10.09 с текущим кодом в Конструкторе expiredAt устанавливается на
-        // <текущая дата> +24 часа, а надо было бы на 11.09. Для этого я бы вызвал установку expiredAt у setCreatedDate
+        /*         Я бы здесь делал иначе, если бы в ТЗ был эндпойнт по созданию URL-ов
+                 Чтобы была возможность добавить createdDate на нужную дату и у нас не "поехал" expiredAt
+                 Пример: Я хочу создать сущность URL-а на 10.09 с текущим кодом в Конструкторе expiredAt устанавливается на
+                 <текущая дата> +24 часа, а надо было бы на 11.09. Для этого я бы вызвал установку expiredAt у setCreatedDate*/
         $date = new \DateTimeImmutable();
         $this->setCreatedDate($date);
-/*        $this->setHash($date->format('Y-m-d H:i:s'));*/
         $this->setHash(substr(md5($this->url), 0, 14));
         $this->setExpiresAt($date->add(new DateInterval('P1D')));
     }

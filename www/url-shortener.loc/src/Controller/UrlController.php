@@ -59,11 +59,11 @@ class UrlController extends AbstractController
      * @Route("/decode-url", name="decode_url")
      * @throws NonUniqueResultException
      */
-    public function decodeUrl(Request $request): JsonResponse
+/*    public function decodeUrl(Request $request): JsonResponse
     {
         $hash = $request->get('hash');
         return $this->urlDecoderService->decodeUrl($hash);
-    }
+    }*/
 
     /**
      * @Route("/redirect/{hash}", name="redirect_url")
@@ -87,7 +87,6 @@ class UrlController extends AbstractController
     public function sendUrls(): JsonResponse
     {
         try {
-            // Отправляем новые URL
             $this->urlSenderService->sendNewUrls();
             return new JsonResponse(['status' => 'success'], 200);
         } catch (\Exception $e) {
