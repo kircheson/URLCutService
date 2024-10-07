@@ -1,17 +1,29 @@
-# README #
+## Инструкции по настройке проекта
 
-This is a test work from Web Department of Unigine Company.
+1. Клонируйте репозиторий:
 
-### How do I get set up? ###
+   **git clone https://github.com/kircheson/URLCutService.git**
 
-* Install Docker Compose
-* Install Git
-* Clone this repository
-* Put ```127.0.0.1 url-shortener.loc``` into your hosts file
-* Run ```docker-compose up``` in the root of the repository
-* Go to ```http://url-shortener.loc``` in your browser
+   **cd UNIGINE_test/images**
 
-### How do I use it? ###
+2. Запустите Docker-контейнеры:
 
-* To encode ```someurl``` you can use ```/encode-url?url=someurl``` endpoint
-* To decode ```somehash``` you can use ```/decode-url?hash=somehash``` endpoint
+   **docker compose up -d**
+
+3. Получите доступ к PHP-контейнеру:
+
+   **docker exec -it unigine_test_unigine_test_php_1 bash**
+
+4. Установите зависимости PHP:
+
+   **composer install**
+
+   **composer update**
+
+5. Выполните миграции базы данных:
+
+   **bin/console doctrine:migrations:migrate**
+
+6. Загрузите фикстуры:
+
+   **bin/console doctrine:fixtures:load**
