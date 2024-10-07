@@ -17,9 +17,7 @@ class UrlStatisticsController extends AbstractController
         $this->urlService = $urlService;
     }
 
-    /**
-     * @Route("/api/urls", name="add_url", methods={"POST"})
-     */
+    #[Route("/api/urls", name: "add_url", methods: ["POST"])]
     public function addUrl(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -37,9 +35,7 @@ class UrlStatisticsController extends AbstractController
         return new JsonResponse(['status' => 'success', 'message' => 'URL added successfully'], 201);
     }
 
-    /**
-     * @Route("/api/urls/stats", name="url_stats", methods={"GET"})
-     */
+    #[Route("/api/urls/stats", name: "url_stats", methods: ["GET"])]
     public function getStats(Request $request): JsonResponse
     {
         try {

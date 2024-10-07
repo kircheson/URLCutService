@@ -17,9 +17,6 @@ class UrlDecoderService
         $this->urlRepository = $urlRepository;
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
     public function decodeUrl(string $hash): array
     {
         $url = $this->urlRepository->findOneByHash($hash);

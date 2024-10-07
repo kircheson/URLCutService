@@ -28,9 +28,7 @@ class UrlController extends AbstractController
         $this->urlSenderService = $urlSenderService;
     }
 
-    /**
-     * @Route("/encode-url", name="encode_url", methods={"POST"})
-     */
+    #[Route("/encode-url", name: "encode_url", methods: ["POST"])]
     public function encodeUrl(Request $request): JsonResponse
     {
         $inputUrl = $request->get('url');
@@ -49,10 +47,7 @@ class UrlController extends AbstractController
         return new JsonResponse(['status' => 'success', 'hash' => $hash], 200);
     }
 
-    /**
-     * @Route("/decode-url", name="decode_url", methods={"POST"})
-     * @throws NonUniqueResultException
-     */
+    #[Route('/decode-url', name: 'decode_url', methods: ['POST'])]
     public function decodeUrl(Request $request): JsonResponse
     {
         $hash = $request->get('hash');
@@ -66,10 +61,8 @@ class UrlController extends AbstractController
         return new JsonResponse(['status' => 'success', 'url' => $result['url']], 200);
     }
 
-    /**
-     * @Route("/redirect/{hash}", name="redirect_url", methods={"GET"})
-     * @throws NonUniqueResultException
-     */
+
+    #[Route('/redirect/{hash}', name: 'redirect_url', methods: ['GET'])]
     public function redirectUrl($hash, UrlRepository $urlRepository): RedirectResponse
     {
         $url = $urlRepository->findOneByHash($hash);
@@ -81,10 +74,7 @@ class UrlController extends AbstractController
         return $this->redirect($url->getUrl());
     }
 
-    /**
-     * @Route("/api/send-urls", name="send_urls", methods={"POST"})
-     * @throws TransportExceptionInterface
-     */
+    #[Route('/api/send-urls', name: 'send_urls', methods: ['POST'])]
     public function sendUrls(): JsonResponse
     {
         try {

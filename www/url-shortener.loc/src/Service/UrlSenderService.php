@@ -17,9 +17,6 @@ class UrlSenderService
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     */
     public function sendNewUrls($endpoint): void
     {
         $urlRepository = $this->entityManager->getRepository(Url::class);
