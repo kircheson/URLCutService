@@ -30,7 +30,7 @@ class UrlDecoderService
 
         $currentDate = new DateTimeImmutable();
 
-        if ($url->getExpiresAt() < $currentDate) {
+        if ($url->getExpiredAt() < $currentDate) {
             return ['error' => 'This URL has expired.', 'status' => 410];
         }
 
