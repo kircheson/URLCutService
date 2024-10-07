@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Url
 {
+    const EXPIRATION_INTERVAL = 'P1D'; // Константа для временного диапазона, ставим сутки для примера
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -53,7 +55,7 @@ class Url
         $date = new \DateTimeImmutable();
         $this->setCreatedDate($date);
         $this->setHash(substr(md5($this->url), 0, 14));
-        $this->setExpiresAt($date->add(new DateInterval('P1D')));
+        $this->setExpiresAt($date->add(new DateInterval(self::EXPIRATION_INTERVAL))); // Используем константу
     }
 
     public function getId(): ?int
