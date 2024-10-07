@@ -1,0 +1,47 @@
+version: '3'
+services:
+    unigine_test_nginx:
+        image: nginx:latest
+        container_name: urlcutservice_nginx
+        ports:
+            - "${NGINX_PORT}:80"
+        volumes:
+            - ./hosts:/etc/nginx/conf.d
+            - ./www:/var/www
+            - ./logs/nginx:/var/log/nginx
+        links:
+            - unigine_test_php
+        networks:
+            - urlcutservice_network
+
+
+    unigine_test_php:
+        build: ../../images/php
+        container_name: urlcutservice_php
+        links:
+            - unigine_test_mysql
+        volumes:
+            - ./www:/var/www
+        networks:
+            - urlcutservice_network
+
+    unigine_test_mysql:
+        image: mysql:latest
+        container_name: urlcutservice_db
+        volumes:
+           - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
+           - ./.docker/mysql/logs/:/var/log/mysql
+        environment:
+            MYSQL_HOST: urlcutservice_db
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: url_shortener
+            MYSQL_USER: user
+            MYSQL_PASSWORD: user
+        ports:
+            - "3310:3306"
+        user: "${UID}:${GID}"
+        networks:
+            - urlcutservice_network
+networks:
+    urlcutservice_network:
+        driver: bridge
