@@ -17,12 +17,9 @@ class UrlService
 
     public function addUrl(string $urlString, string $createdDate): JsonResponse
     {
-        // Создаем новую сущность Url
         try {
-            // Генерируем уникальный хеш на основе переданного URL
             $hash = substr(md5($urlString), 0, 14);
 
-            // Проверяем существование хеша в базе данных
             $existingUrl = $this->entityManager->getRepository(Url::class)->findOneBy(['hash' => $hash]);
             if ($existingUrl) {
                 return new JsonResponse(['error' => 'URL with this hash already exists'], 409);
@@ -31,17 +28,14 @@ class UrlService
             $url = new Url();
             $url->setUrl($urlString);
 
-            // Устанавливаем дату создания из запроса
             $date = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s', trim($createdDate));
             if ($date === false) {
                 return new JsonResponse(['error' => 'Invalid date format'], 400);
             }
             $url->setCreatedDate($date);
 
-            // Устанавливаем сгенерированный хеш
             $url->setHash($hash);
 
-            // Сохраняем в базе данных
             $this->entityManager->persist($url);
             $this->entityManager->flush();
 
@@ -54,14 +48,13 @@ class UrlService
     public function getStats(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate, ?string $domain): array
     {
         $uniqueUrls = $this->entityManager->getRepository(Url::class)->findUniqueUrlsByDateRange($startDate, $endDate);
-        $uniqueUrlsCount = count($uniqueUrls); // Подсчитываем количество уникальных URL
+        $uniqueUrlsCount = count($uniqueUrls);
 
-        // Получаем количество уникальных URL с указанным доменом.
         if ($domain) {
             $uniqueDomainUrls = $this->entityManager->getRepository(Url::class)->findUniqueUrlsByDomain($domain);
-            $uniqueDomainCount = count($uniqueDomainUrls); // Подсчитываем количество уникальных доменных URL
+            $uniqueDomainCount = count($uniqueDomainUrls);
         } else {
-            $uniqueDomainCount = 0; // Если домен не указан, устанавливаем в 0.
+            $uniqueDomainCount = 0;
         }
 
         return [

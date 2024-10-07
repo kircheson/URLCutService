@@ -41,27 +41,25 @@ class UrlRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-/*     Метод для поиска уникальных URL за заданный промежуток времени*/
     public function findUniqueUrlsByDateRange(\DateTimeImmutable $startDate, \DateTimeImmutable $endDate)
     {
         return $this->createQueryBuilder('u')
-            ->select('DISTINCT u.url') // Используем DISTINCT для уникальных значений
+            ->select('DISTINCT u.url')
             ->andWhere('u.createdDate >= :start')
             ->andWhere('u.createdDate <= :end')
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate)
             ->getQuery()
-            ->getScalarResult(); // Используем getScalarResult для получения массива строк
+            ->getScalarResult();
     }
 
-    // Метод для поиска уникальных URL по домену
     public function findUniqueUrlsByDomain(string $domain)
     {
         return $this->createQueryBuilder('u')
-            ->select('DISTINCT u.url') // Используем DISTINCT для уникальных значений
+            ->select('DISTINCT u.url')
             ->andWhere('u.url LIKE :domain')
             ->setParameter('domain', '%' . $domain . '%')
             ->getQuery()
-            ->getScalarResult(); // Используем getScalarResult для получения массива строк
+            ->getScalarResult();
     }
 }

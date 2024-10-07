@@ -20,21 +20,20 @@ class UrlDecoderService
     /**
      * @throws NonUniqueResultException
      */
-    public function decodeUrl(string $hash): JsonResponse
+    public function decodeUrl(string $hash): array
     {
         $url = $this->urlRepository->findOneByHash($hash);
 
         if (empty($url)) {
-            return new JsonResponse(['error' => 'Non-existent hash.'], 404);
+            return ['error' => 'Non-existent hash.', 'status' => 404];
         }
 
-        // Проверка на истечение срока действия
         $currentDate = new DateTimeImmutable();
 
         if ($url->getExpiresAt() < $currentDate) {
-            return new JsonResponse(['error' => 'This URL has expired.'], 410); // Код 410 Gone
+            return ['error' => 'This URL has expired.', 'status' => 410];
         }
 
-        return new JsonResponse(['url' => $url->getUrl()]);
+        return ['url' => $url->getUrl(), 'status' => 200];
     }
 }

@@ -22,15 +22,12 @@ class UrlStatisticsController extends AbstractController
      */
     public function addUrl(Request $request): JsonResponse
     {
-        // Получаем данные из запроса
         $data = json_decode($request->getContent(), true);
 
-        // Проверяем наличие необходимых данных
         if (!isset($data['url']) || !isset($data['created_date'])) {
             return new JsonResponse(['error' => 'Invalid input'], 400);
         }
 
-        // Используем сервис для добавления URL
         return $this->urlService->addUrl($data['url'], $data['created_date']);
     }
 

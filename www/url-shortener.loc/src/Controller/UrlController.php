@@ -29,7 +29,7 @@ class UrlController extends AbstractController
     }
 
     /**
-     * @Route("/encode-url", name="encode_url")
+     * @Route("/encode-url", name="encode_url", methods={"POST"})
      */
     public function encodeUrl(Request $request): JsonResponse
     {
@@ -56,17 +56,20 @@ class UrlController extends AbstractController
     }
 
     /**
-     * @Route("/decode-url", name="decode_url")
+     * @Route("/decode-url", name="decode_url", methods={"POST"})
      * @throws NonUniqueResultException
      */
-/*    public function decodeUrl(Request $request): JsonResponse
+    public function decodeUrl(Request $request): JsonResponse
     {
         $hash = $request->get('hash');
-        return $this->urlDecoderService->decodeUrl($hash);
-    }*/
+
+        $result = $this->urlDecoderService->decodeUrl($hash);
+
+        return new JsonResponse($result, $result['status']);
+    }
 
     /**
-     * @Route("/redirect/{hash}", name="redirect_url")
+     * @Route("/redirect/{hash}", name="redirect_url", methods={"GET"})
      * @throws NonUniqueResultException
      */
     public function redirectUrl($hash, UrlRepository $urlRepository): RedirectResponse
