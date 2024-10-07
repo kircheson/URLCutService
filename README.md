@@ -2,7 +2,7 @@
 
 1. Клонируйте репозиторий:
 
-   **git clone https://github.com/kircheson/URLCutService.git**
+   **git clone https://github.com/kircheson/https://github.com/kircheson/URLCutService.git**
 
    **cd UNIGINE_test/images**
 
