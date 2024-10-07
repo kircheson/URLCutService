@@ -1,33 +1,35 @@
 version: '3'
 services:
-    unigine_test_nginx:
-        image: nginx:latest
-        container_name: urlcutservice_nginx
+    test_nginx:
+        build:
+            context: ./.docker/nginx
+            dockerfile: Dockerfile
+        container_name: urlcut_service_nginx
         ports:
             - "${NGINX_PORT}:80"
         volumes:
-            - ./hosts:/etc/nginx/conf.d
-            - ./www:/var/www
-            - ./logs/nginx:/var/log/nginx
+            - ./:/var/www/
+            - ./var:/var/www/var
+            - ./vendor:/var/www/vendor
         links:
-            - unigine_test_php
+            - test_php
         networks:
             - urlcutservice_network
 
 
-    unigine_test_php:
-        build: ../../images/php
-        container_name: urlcutservice_php
+    test_php:
+        build: ./.docker/php
+        container_name: urlcut_service_php
         links:
-            - unigine_test_mysql
+            - test_mysql
         volumes:
-            - ./www:/var/www
+            - ./:/var/www
         networks:
             - urlcutservice_network
 
-    unigine_test_mysql:
+    test_mysql:
         image: mysql:latest
-        container_name: urlcutservice_db
+        container_name: urlcut_service_db
         volumes:
            - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
            - ./.docker/mysql/logs/:/var/log/mysql
@@ -38,8 +40,7 @@ services:
             MYSQL_USER: user
             MYSQL_PASSWORD: user
         ports:
-            - "3310:3306"
-        user: "${UID}:${GID}"
+            - "${DB_PORT}:3306"
         networks:
             - urlcutservice_network
 networks:

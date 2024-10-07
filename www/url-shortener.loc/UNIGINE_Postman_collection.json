@@ -23,7 +23,7 @@
 						}
 					}
 				},
-				"url": "http://localhost/redirect/hash1"
+				"url": "http://localhost:8084/redirect/hash1"
 			},
 			"response": []
 		},
@@ -42,11 +42,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost/encode-url?url=https://another-example.com",
+					"raw": "http://localhost:8084/encode-url?url=https://another-example.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
+					"port": "8084",
 					"path": [
 						"encode-url"
 					],
@@ -75,11 +76,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost/encode-url?url=https://unrealtesturl.com",
+					"raw": "http://localhost:8084/encode-url?url=https://unrealtesturl.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
+					"port": "8084",
 					"path": [
 						"encode-url"
 					],
@@ -108,11 +110,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost/decode-url?hash=hash3",
+					"raw": "http://localhost:8084/decode-url?hash=hash3",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
+					"port": "8084",
 					"path": [
 						"decode-url"
 					],
@@ -140,7 +143,7 @@
 						}
 					}
 				},
-				"url": "http://localhost/api/urls"
+				"url": "http://localhost:8084/api/urls"
 			},
 			"response": []
 		},
@@ -150,11 +153,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost/api/urls/stats?start_date=2024-10-01&end_date=2024-10-05&domain=example.com",
+					"raw": "http://localhost:8084/api/urls/stats?start_date=2024-10-01&end_date=2024-10-05&domain=example.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
+					"port": "8084",
 					"path": [
 						"api",
 						"urls",
