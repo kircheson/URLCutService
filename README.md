@@ -4,7 +4,7 @@
 
    **git clone https://github.com/kircheson/https://github.com/kircheson/URLCutService.git**
 
-   **cd URLCutService/images**
+   **cd URLCutService**
 
 2. Запустите Docker-контейнеры:
 
