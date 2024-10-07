@@ -12,7 +12,7 @@
 
 3. Получите доступ к PHP-контейнеру:
 
-   **docker exec -it unigine_test_unigine_test_php_1 bash**
+   **docker exec -it urlcut_service_php bash**
 
 4. Установите зависимости PHP:
 
