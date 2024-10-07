@@ -4,7 +4,7 @@
 
    **git clone https://github.com/kircheson/https://github.com/kircheson/URLCutService.git**
 
-   **cd UNIGINE_test/images**
+   **cd URLCutService/images**
 
 2. Запустите Docker-контейнеры:
 
