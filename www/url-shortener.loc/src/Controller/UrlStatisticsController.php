@@ -28,7 +28,13 @@ class UrlStatisticsController extends AbstractController
             return new JsonResponse(['error' => 'Invalid input'], 400);
         }
 
-        return $this->urlService->addUrl($data['url'], $data['created_date']);
+        $result = $this->urlService->addUrl($data['url'], $data['created_date']);
+
+        if (isset($result['error'])) {
+            return new JsonResponse(['error' => $result['error']], $result['status']);
+        }
+
+        return new JsonResponse(['status' => 'success', 'message' => 'URL added successfully'], 201);
     }
 
     /**
@@ -38,17 +44,18 @@ class UrlStatisticsController extends AbstractController
     {
         try {
             // Получаем даты из параметров запроса (формат: YYYY-MM-DD-H-I-S)
-            if (!$startDate = new \DateTimeImmutable($request->query->get('start_date'))) {
-                throw new \Exception("Invalid start date");
-            }
+            $startDate = new \DateTimeImmutable($request->query->get('start_date'));
+            $endDate = new \DateTimeImmutable($request->query->get('end_date'));
 
-            if (!$endDate = new \DateTimeImmutable($request->query->get('end_date'))) {
-                throw new \Exception("Invalid end date");
+            if ($startDate > $endDate) {
+                return new JsonResponse(['error' => 'Start date must be earlier than end date.'], 400);
             }
 
             $domain = trim($request->query->get('domain'));
 
-            return new JsonResponse($this->urlService->getStats($startDate, $endDate, $domain));
+            $stats = $this->urlService->getStats($startDate, $endDate, $domain);
+
+            return new JsonResponse(['status' => 'success', 'data' => $stats], 200);
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'Could not retrieve statistics: ' . $e->getMessage()], 500);
         }

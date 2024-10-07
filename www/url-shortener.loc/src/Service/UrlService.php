@@ -15,14 +15,14 @@ class UrlService
         $this->entityManager = $entityManager;
     }
 
-    public function addUrl(string $urlString, string $createdDate): JsonResponse
+    public function addUrl(string $urlString, string $createdDate): array
     {
         try {
             $hash = substr(md5($urlString), 0, 14);
 
             $existingUrl = $this->entityManager->getRepository(Url::class)->findOneBy(['hash' => $hash]);
             if ($existingUrl) {
-                return new JsonResponse(['error' => 'URL with this hash already exists'], 409);
+                return ['error' => 'URL with this hash already exists', 'status' => 409];
             }
 
             $url = new Url();
@@ -30,18 +30,17 @@ class UrlService
 
             $date = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s', trim($createdDate));
             if ($date === false) {
-                return new JsonResponse(['error' => 'Invalid date format'], 400);
+                return ['error' => 'Invalid date format', 'status' => 400];
             }
             $url->setCreatedDate($date);
-
             $url->setHash($hash);
 
             $this->entityManager->persist($url);
             $this->entityManager->flush();
 
-            return new JsonResponse(['status' => 'URL added successfully'], 201);
+            return ['status' => 'success', 'message' => 'URL added successfully', 'http_code' => 201];
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Could not save URL: ' . $e->getMessage()], 500);
+            return ['error' => 'Could not save URL: ' . $e->getMessage(), 'status' => 500];
         }
     }
 

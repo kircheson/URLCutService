@@ -37,22 +37,16 @@ class UrlController extends AbstractController
         $error = $this->urlEncoderService->validateUrl($inputUrl);
 
         if ($error) {
-            return $this->json([
-                'error' => $error
-            ], 400);
+            return new JsonResponse(['error' => $error], 400);
         }
 
         $hash = $this->urlEncoderService->encodeUrl($inputUrl);
 
         if ($hash === null) {
-            return $this->json([
-                'error' => 'URL not found in the database.'
-            ], 404);
+            return new JsonResponse(['error' => 'URL not found in the database.'], 404);
         }
 
-        return $this->json([
-            'hash' => $hash
-        ]);
+        return new JsonResponse(['status' => 'success', 'hash' => $hash], 200);
     }
 
     /**
@@ -65,7 +59,11 @@ class UrlController extends AbstractController
 
         $result = $this->urlDecoderService->decodeUrl($hash);
 
-        return new JsonResponse($result, $result['status']);
+        if (isset($result['error'])) {
+            return new JsonResponse(['error' => $result['error']], $result['status']);
+        }
+
+        return new JsonResponse(['status' => 'success', 'url' => $result['url']], 200);
     }
 
     /**
