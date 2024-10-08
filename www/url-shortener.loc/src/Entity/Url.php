@@ -6,6 +6,8 @@ use App\Repository\UrlRepository;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UrlRepository::class)]
 #[ORM\Table(name: 'url')]
@@ -20,15 +22,25 @@ class Url
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'URL cannot be blank.')]
+    #[Assert\Url(message: 'The URL "{{ value }}" is not a valid URL.')]
     private string $url;
 
     #[ORM\Column(type: 'string', length: 14)]
+    #[Assert\NotBlank(message: 'Hash cannot be blank.')]
+    #[Assert\Length(
+        min: 14,
+        max: 14,
+        minMessage: 'Hash must be exactly {{ limit }} characters long.',
+        maxMessage: 'Hash must be exactly {{ limit }} characters long.'
+    )]
     private string $hash;
 
     #[ORM\Column(name: 'created_date', type: 'datetime_immutable')]
     private DateTimeImmutable $createdDate;
 
     #[ORM\Column(name: 'expired_at', type: 'datetime_immutable', nullable: true)]
+    #[Assert\DateTime(message: 'Expired at must be a valid datetime.')]
     private ?DateTimeImmutable $expiredAt;
 
     #[ORM\Column(type: 'boolean')]
